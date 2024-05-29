@@ -1,3 +1,5 @@
+import 'package:apiflutter/addList.dart';
+import 'package:apiflutter/userForm.dart';
 import 'package:flutter/material.dart';
 import 'user.dart';
 import 'user_service.dart';
@@ -10,8 +12,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter User API Demo',
       theme: ThemeData(
+        
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
@@ -36,6 +40,8 @@ class _UserListScreenState extends State<UserListScreen> {
       TextEditingController(); // Added for email
   final TextEditingController pictureController = TextEditingController();
 
+  get onPressed => null;
+
   @override
   void initState() {
     super.initState();
@@ -45,13 +51,35 @@ class _UserListScreenState extends State<UserListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:  Color.fromARGB(210, 245, 204, 129),
       appBar: AppBar(
-        title: Text('User List'),
-      ),
+        backgroundColor: Color.fromARGB(255, 243, 142, 47),
+        centerTitle: true,
+        title: const Text('Lista de Usuários',
+            style: TextStyle(
+              
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 255, 255, 255),
+
+              
+            )),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add, color: Colors.white),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => AddList()),
+              );
+            },
+          ),
+        ],
+
+     ),
       body: Column(
         children: [
           _buildUserList(),
-          _buildAddUserForm(),
+        //  _buildAddUserForm(),
         ],
       ),
     );
@@ -122,16 +150,16 @@ class _UserListScreenState extends State<UserListScreen> {
             children: <Widget>[
               TextFormField(
                   controller: tituloController,
-                  decoration: InputDecoration(labelText: 'Title')),
+                  decoration: InputDecoration(labelText: 'Título')),
               TextFormField(
                   controller: firstnameController,
-                  decoration: InputDecoration(labelText: 'First Name')),
+                  decoration: InputDecoration(labelText: 'Primeiro Nome')),
               TextFormField(
                   controller: lastnameController,
-                  decoration: InputDecoration(labelText: 'Last Name')),
+                  decoration: InputDecoration(labelText: 'Último Nome')),
               TextFormField(
                   controller: pictureController,
-                  decoration: InputDecoration(labelText: 'Picture URL')),
+                  decoration: InputDecoration(labelText: 'URL da Imagem')),
             ],
           ),
         ),
@@ -151,9 +179,9 @@ class _UserListScreenState extends State<UserListScreen> {
   void _updateUser(User user) {
     // Inicializa um Map para armazenar apenas os campos permitidos para atualização
     Map<String, dynamic> dataToUpdate = {
-      'firstName': firstnameController.text,
-      'lastName': lastnameController.text,
-      'picture': pictureController.text,
+      'Primeiro Nome': firstnameController.text,
+      'Último Nome': lastnameController.text,
+      'Imagem': pictureController.text,
       // Não inclua 'email' pois é proibido atualizar
     };
 
@@ -179,53 +207,53 @@ class _UserListScreenState extends State<UserListScreen> {
     });
   }
 
-  Widget _buildAddUserForm() {
-    return Padding(
-      padding: EdgeInsets.all(8.0),
-      child: Column(
-        children: <Widget>[
-          TextFormField(
-              controller: firstnameController,
-              decoration: InputDecoration(labelText: 'First Name')),
-          TextFormField(
-              controller: lastnameController,
-              decoration: InputDecoration(labelText: 'Last Name')),
-          TextFormField(
-              controller: emailController, // Added email input field
-              decoration: InputDecoration(labelText: 'Email')),
-          ElevatedButton(
-            onPressed: _addUser,
-            child: Text('Add User'),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildAddUserForm() {
+  //   return Padding(
+  //     padding: EdgeInsets.all(8.0),
+  //     child: Column(
+  //       children: <Widget>[
+  //         TextFormField(
+  //             controller: firstnameController,
+  //             decoration: InputDecoration(labelText: 'Primeiro Nome')),
+  //         TextFormField(
+  //             controller: lastnameController,
+  //             decoration: InputDecoration(labelText: 'Último Nome')),
+  //         TextFormField(
+  //             controller: emailController, // Added email input field
+  //             decoration: InputDecoration(labelText: 'Email')),
+  //         ElevatedButton(
+  //           onPressed: _addUser,
+  //           child: Text('Adicionar Usuário'),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  void _addUser() {
-    if (firstnameController.text.isNotEmpty &&
-        lastnameController.text.isNotEmpty &&
-        emailController.text.isNotEmpty) {
-      userService
-          .createUser(User(
-        id: '', // ID é gerado pela API, não precisa enviar
-        title: tituloController
-            .text, // Incluído, assumindo que você ainda quer enviar isso
-        firstName: firstnameController.text,
-        lastName: lastnameController.text,
-        email: emailController.text,
-        picture: pictureController.text, // Incluído, assumindo que é necessário
-      ))
-          .then((newUser) {
-        _showSnackbar('User added successfully!');
-        _refreshUserList();
-      }).catchError((error) {
-        _showSnackbar('Failed to add user: $error');
-      });
-    } else {
-      _showSnackbar('Please fill in all fields.');
-    }
-  }
+  // void _addUser() {
+  //   if (firstnameController.text.isNotEmpty &&
+  //       lastnameController.text.isNotEmpty &&
+  //       emailController.text.isNotEmpty) {
+  //     userService
+  //         .createUser(User(
+  //       id: '', // ID é gerado pela API, não precisa enviar
+  //       title: tituloController
+  //           .text, // Incluído, assumindo que você ainda quer enviar isso
+  //       firstName: firstnameController.text,
+  //       lastName: lastnameController.text,
+  //       email: emailController.text,
+  //       picture: pictureController.text, // Incluído, assumindo que é necessário
+  //     ))
+  //         .then((newUser) {
+  //       _showSnackbar('Usuário adicionado com sucesso!');
+  //       _refreshUserList();
+  //     }).catchError((erro) {
+  //       _showSnackbar('Falha ao adicionar usuário: $erro');
+  //     });
+  //   } else {
+  //     _showSnackbar('Por favor preencha todos os campos.');
+  //   }
+  //}
 
   void _refreshUserList() {
     setState(() {
@@ -237,4 +265,8 @@ class _UserListScreenState extends State<UserListScreen> {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
   }
+}
+
+class UserForm {
+  const UserForm();
 }
